@@ -9,6 +9,6 @@ RUN set -ex \
     && apk --no-cache add postgresql-dev \
     && docker-php-ext-install pgsql json
 WORKDIR /app
-COPY ./app .
+COPY ./public .
 CMD /wait \
     && php -S 0.0.0.0:80 -t public
