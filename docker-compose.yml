@@ -1,0 +1,36 @@
+version: '3.8'
+
+x-project: &project
+  build: .
+  restart: unless-stopped
+  depends_on:
+    - postgres
+  ports:
+    - "8084:80"
+  volumes:
+      - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
+  environment:
+    APP_DEBUG: 'true'
+    APP_KEY: 'base64:zu+Qx5eMn6HC7UthRAEaHlcN8wwKxV+Em7GhuJpifkQ='
+    APP_TIMEZONE: 'Asia/Tomsk'
+    DB_CONNECTION: pgsql
+    DB_HOST: postgres
+    DB_PORT: 5432
+    DB_DATABASE: app
+    DB_USERNAME: postgres
+    DB_PASSWORD: password
+    WAIT_HOSTS: postgres:5432
+    JWT_SECRET: "eAEXWnD2bHbcoxZxC6v1jnvzJgD7lNhygGqInMaq6njwg59Qgj0EK80Oyh7jzHpx"
+
+services:
+  project:
+    <<: *project
+  postgres:
+    image: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: app
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - ./postgresql-data:/app/postgresql-data
