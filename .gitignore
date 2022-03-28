@@ -1,3 +1,4 @@
 !/postgresql-data/
 /.idea
 .gitignore
+docker-compose.local.yml
