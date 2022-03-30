@@ -8,23 +8,23 @@ orders: id PK, cafe_id, user_id - флаги и мусор
    - возвращает jwt (?)
    - возвращает id:
      - payload
-     - redirect(url.id=1)
+     - redirect()
 
 pages:
     - register
     - login
-    - /id=1/orders
-    - /id=1/newOrder
+    - /orders
+    - /newOrder
 
 newOrder:
     - давить string к выбранному кафе из списка
     - может быть флаг
 
 login
-    - redirect /id=1/orders
+    - redirect /orders
 
 уязвимость:
-    - id в урл - автоинкремент
+    - id в токене - автоинкремент
     - дефолтная подпись токена + нет проверки на Null
     
 
