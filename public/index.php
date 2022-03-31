@@ -3,7 +3,6 @@ require "./database.php";
 require "./jwt.php";
 $GLOBALS['JWTKey'] = 'eAEXWnD2bHbcoxZxC6v1jnvzJgD7lNhygGqInMaq6njwg59Qgj0EK80Oyh7jzHpx';
 if (!(isset($GLOBALS['dbConn']))) initDB();
-
 $request = $_SERVER['REQUEST_URI'];
 try {
     switch ($request) {
@@ -23,6 +22,10 @@ try {
         case '/orders':
             $_GET['payload'] = validateJWT($_COOKIE['Authorization'], $GLOBALS['JWTKey']);
             require __DIR__ . '/orders.php';
+            break;
+        case '/users':
+            $_GET['payload'] = validateJWT($_COOKIE['Authorization'], $GLOBALS['JWTKey']);
+            require __DIR__ . '/users.php';
             break;
         case '':
         case '/':

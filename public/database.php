@@ -1,11 +1,10 @@
 <?php
-$GLOBALS['dbConn'] = pg_connect('host=postgres dbname=app user=postgres password=password')
-    or die('Cannot connect to DB: ' . pg_last_error());
-//$dbInfo = pg_version($GLOBALS['dbConn']);
 
 if(!function_exists('initDB')) {
     function initDB(): void
     {
+        $GLOBALS['dbConn'] = pg_connect('host=postgres dbname=app user=postgres password=password')
+            or die('Cannot connect to DB: ' . pg_last_error());
         pg_query($GLOBALS['dbConn'], "CREATE TABLE IF NOT EXISTS users(
             user_id SERIAL PRIMARY KEY,
             user_name VARCHAR(25) NOT NULL,
@@ -20,10 +19,8 @@ if(!function_exists('initDB')) {
         pg_query($GLOBALS['dbConn'], "CREATE TABLE IF NOT EXISTS orders(
             order_id SERIAL PRIMARY KEY,
             order_name VARCHAR(25) NOT NULL,
-            cafe_id INT,
-            CONSTRAINT fk_cafes
-                FOREIGN KEY(cafe_id)
-                    REFERENCES cafes(cafe_id)
+            cafe_id INT REFERENCES cafes(cafe_id) NOT NULL,
+            user_id INT REFERENCES users(user_id) NOT NULL
         )") or die("Error creating orders table");
 
         $res = pg_query($GLOBALS['dbConn'], "SELECT * FROM cafes");
@@ -36,11 +33,3 @@ if(!function_exists('initDB')) {
             ") or die("Error inserting cafe_name into cafes table");
     }
 }
-//$data = pg_query($GLOBALS['dbConn'],"DELETE FROM cafes
-//WHERE cafe_id =2;
-//") or die("Error creating orders table");
-//
-//$data = pg_query($GLOBALS['dbConn'],"SELECT * FROM cafes WHERE cafe_id > 2;
-//") or die("Error creating orders table");
-//echo $data;
-

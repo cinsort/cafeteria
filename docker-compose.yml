@@ -21,6 +21,9 @@ x-project: &project
     DB_PASSWORD: password
     WAIT_HOSTS: postgres:5432
 
+volumes:
+  postgresql-data: {}
+
 services:
   project:
     <<: *project
@@ -32,4 +35,4 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
     volumes:
-      - ./postgresql-data:/app/postgresql-data
+      - postgresql-data:/var/lib/postgresql/data

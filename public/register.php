@@ -5,7 +5,7 @@ $sql = "INSERT INTO users (user_name, password) VALUES ($1, $2) RETURNING user_i
 $query = pg_prepare($GLOBALS['dbConn'], "my_query", $sql);
 $result = pg_execute($GLOBALS['dbConn'], "my_query", array($_POST['user_name'], $_POST['password']));
 if (!($result))
-    throw new Exception('Register error: inserting failed', 409);
+    throw new Exception("Register error: inserting failed: $query\n", 409);
 $user_id = pg_fetch_row($result)['0'];
 
 $payload = [
