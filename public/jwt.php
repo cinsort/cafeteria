@@ -19,7 +19,7 @@ if(!function_exists('encodeJWT')) {
 }
 
 if(!function_exists('validateJWT')) {
-    function validateJWT($jwt, $secret): bool
+    function validateJWT($jwt, $secret): string
     {
         $tokenParts = explode('.', $jwt);
         $header = base64_decode($tokenParts[0]);
@@ -33,7 +33,6 @@ if(!function_exists('validateJWT')) {
         $base64URLPayload = base64URLEncode($payload);
         $signature = hash_hmac('SHA256', $base64URLHeader . "." . $base64URLPayload, $secret, true);
         $base64URLSignature = base64URLEncode($signature);
-        //закладка в реализации - если подпись правильная, возвращает тру
         $isSignatureNotValid = !($base64URLSignature === $signatureProvided);
 
         if ($isTokenExpired || $isSignatureNotValid)
