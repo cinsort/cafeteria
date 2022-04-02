@@ -9,12 +9,15 @@ if(!function_exists('base64URLEncode')) {
 if(!function_exists('encodeJWT')) {
     function encodeJWT(array $payload, string $secret, array $header = ['typ' => 'JWT', 'alg' => 'HS256']): string
     {
-        $headerEncoded = base64URLEncode(json_encode($header));
-        $payloadEncoded = base64URLEncode(json_encode($payload));
-        $signature = hash_hmac('SHA256', "$headerEncoded.$payloadEncoded", $secret, true);
-        $signatureEncoded = base64URLEncode($signature);
-
-        return "$headerEncoded.$payloadEncoded.$signatureEncoded";
+        if (isset($payload['iss']) && isset($payload['exp'])) {
+            $headerEncoded = base64URLEncode(json_encode($header));
+            $payloadEncoded = base64URLEncode(json_encode($payload));
+            $signature = hash_hmac('SHA256', "$headerEncoded.$payloadEncoded", $secret, true);
+            $signatureEncoded = base64URLEncode($signature);
+            return "$headerEncoded.$payloadEncoded.$signatureEncoded";
+        } else {
+            throw new Exception('jwt error: empty payload', 204);
+        }
     }
 }
 
@@ -36,7 +39,7 @@ if(!function_exists('validateJWT')) {
         $isSignatureNotValid = !($base64URLSignature === $signatureProvided);
 
         if ($isTokenExpired || $isSignatureNotValid)
-            throw new Exception('Invalid Token', 401);
+            throw new Exception('jwt error: invalid token', 401);
 
         return $payload;
     }

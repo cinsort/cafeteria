@@ -1,5 +1,6 @@
 <?php
 require 'database.php';
+require 'jwt.php';
 ob_start();
 ?>
 <html>
@@ -42,13 +43,16 @@ ob_start();
 
         <?php
         if (!(isset($_GET['payload'])))
-            throw new Exception ('orders error: invalid token', 401);
+            $_GET['payload'] = validateJWT($_COOKIE['Authorization'], $_ENV['JWTKey']);
         $user_id = json_decode($_GET['payload'])->sub;
         $sql = "SELECT cafes.cafe_name, orders.order_name FROM cafes JOIN orders ON cafes.cafe_id = orders.cafe_id WHERE orders.user_id = $1 ORDER BY cafes.cafe_name";
         $query = pg_prepare($GLOBALS['dbConn'], "my_query", $sql);
+        if (!($query)) {
+            throw new Exception('myOrders error: wrong header information', 400);
+        }
         $result = pg_execute($GLOBALS['dbConn'], "my_query", array($user_id));
         if (!($result))
-            throw new Exception("newOrder error: cafe not found: $query\n", 404);
+            throw new Exception("myOrders error: query not found: $query\n", 404);
 
         while ($row = pg_fetch_row($result)) {
             echo "<div style='display: flex; width: fit-content;
@@ -59,7 +63,6 @@ ob_start();
                 echo "<p style='margin: 4px 8px'>$key</p>";
             echo "</div>";
         }
-        http_response_code(200);
         echo "<a href='/newOrder' class='custom-link col s12 btn btn-large waves-effect'>MAKE ONE MORE AGAIN ORDER</a>";
         ?>
 

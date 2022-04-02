@@ -1,11 +1,13 @@
 <?php
-if (!(isset($_GET['payload'])))
-    throw new Exception ('users error: invalid token ', 401);
+require 'jwt.php';
+require 'database.php';
 
+if (!(isset($_GET['payload'])))
+    $_GET['payload'] = validateJWT($_COOKIE['Authorization'], $_ENV['JWTKey']);
 $user_id = json_decode($_GET['payload'])->sub;
 $result = pg_query($GLOBALS['dbConn'], "SELECT user_id, user_name FROM users ORDER BY user_id");
 if (!($result))
-    throw new Exception("users error: cafe not found: SELECT $user_id, user_name FROM users ORDER BY $user_id\n", 404);
+    throw new Exception("users error: query not found", 404);
 
 while ($row = pg_fetch_row($result)) {
     echo "<div style='display: flex; width: fit-content;

@@ -112,9 +112,12 @@ ob_start();
                     $user_id = json_decode($_GET['payload'])->sub;
                     $sql = "SELECT * FROM cafes WHERE cafe_name = $1 LIMIT 1";
                     $query = pg_prepare($GLOBALS['dbConn'], "my_query", $sql);
+                    if (!($query)) {
+                        throw new Exception('newOrder error: wrong header information', 400);
+                    }
                     $result = pg_execute($GLOBALS['dbConn'], "my_query", array($_POST['cafe_name']));
                     if (!($result))
-                        throw new Exception("newOrder error: cafe not found: $query\n", 404);
+                        throw new Exception("newOrder error: query failed: $query\n", 409);
                     $cafe_id = pg_fetch_row($result)['0'];
 
                     $sql = "INSERT INTO orders(order_name, cafe_id, user_id) VALUES ($1, $2, $3)";

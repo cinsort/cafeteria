@@ -89,9 +89,12 @@
             if (isset($_POST['user_name']) && isset($_POST['password'])) {
                 $sql = "INSERT INTO users (user_name, password) VALUES ($1, $2) RETURNING user_id";
                 $query = pg_prepare($GLOBALS['dbConn'], "my_query", $sql);
+                if (!($query)) {
+                    throw new Exception('register error: wrong header information', 400);
+                }
                 $result = pg_execute($GLOBALS['dbConn'], "my_query", array($_POST['user_name'], $_POST['password']));
                 if (!($result))
-                    throw new Exception("Register error: inserting failed: $query\n", 409);
+                    throw new Exception("register error: query failed: $query\n", 409);
                 $user_id = pg_fetch_row($result)['0'];
 
                 $payload = [

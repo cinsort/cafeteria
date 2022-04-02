@@ -47,6 +47,7 @@ ob_start();
                 unset($_COOKIE['Authorization']);
             }
             http_response_code(204);
+            echo "logout: successfully logged out";
         ?>
 
     </center>

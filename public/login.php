@@ -102,34 +102,36 @@
             <div class="section"></div>
 
             <?php
-                if (isset($_POST['user_name']) && isset($_POST['password'])) {
-                    $sql = "SELECT * FROM users WHERE user_name = $1 ORDER BY user_id ASC LIMIT 1";
-                    $query = pg_prepare($GLOBALS['dbConn'], "my_query", $sql);
-                    $result = pg_execute($GLOBALS['dbConn'], "my_query", array($_POST['user_name']));
-                    if (!($result)){
-                        http_response_code(401);
-                        echo (" <p >MAN< SIGN UP</p>
-                            <a href='index' class='back-btn'>GO BACK</a>");
-                    }
-                    $user_id = pg_fetch_row($result)['0'];
-                    $payload = [
-                        'exp' => time() + 7200,
-                        'sub' => $user_id,
-                    ];
-                    $token = encodeJWT($payload, $_ENV['JWTKey']);
-                    http_response_code(200);
-                    setcookie('Authorization', $token);
-
-                    echo "<a href='/myOrders' class='custom-link col s12 btn btn-large waves-effect'>MY ORDERS</a>";
-                } else {
-                    echo "<form class='container' action='/login.php' method='post'>
-                        <label for='first'>Login</label>
-                        <input id='first' type='text' name='user_name' class='container-input'>
-                        <label for='second'>Password</label>
-                        <input id='second' type='password' name='password' class='container-input'>
-                        <button type='submit' class='container-button'>Authorize</button>
-                    </form>";
+            if (isset($_POST['user_name']) && isset($_POST['password'])) {
+                $sql = "SELECT * FROM users WHERE user_name = $1 ORDER BY user_id ASC LIMIT 1";
+                $query = pg_prepare($GLOBALS['dbConn'], "my_query", $sql);
+                if (!($query)) {
+                    throw new Exception('login error: wrong header information', 400);
                 }
+                $result = pg_execute($GLOBALS['dbConn'], "my_query", array($_POST['user_name']));
+                if (!($result)) {
+                    http_response_code(401);
+                    echo (" <p >MAN< SIGN UP</p>
+                        <a href='index' class='back-btn'>GO BACK</a>");
+                }
+                $user_id = pg_fetch_row($result)['0'];
+                $payload = [
+                    'exp' => time() + 7200,
+                    'sub' => $user_id,
+                ];
+                $token = encodeJWT($payload, $_ENV['JWTKey']);
+                http_response_code(200);
+                setcookie('Authorization', $token);
+                echo "<a href='/myOrders' class='custom-link col s12 btn btn-large waves-effect'>MY ORDERS</a>";
+            } else {
+                echo "<form class='container' action='/login.php' method='post'>
+                    <label for='first'>Login</label>
+                    <input id='first' type='text' name='user_name' class='container-input'>
+                    <label for='second'>Password</label>
+                    <input id='second' type='password' name='password' class='container-input'>
+                    <button type='submit' class='container-button'>Authorize</button>
+                </form>";
+            }
             ?>
         </center>
         <div class=" section "></div>
