@@ -21,9 +21,9 @@ try {
             $_GET['payload'] = validateJWT($_COOKIE['Authorization'], $_ENV['JWTKey']);
             require __DIR__ . '/newOrder.php';
             break;
-        case '/orders':
+        case '/myOrders':
             $_GET['payload'] = validateJWT($_COOKIE['Authorization'], $_ENV['JWTKey']);
-            require __DIR__ . '/orders.php';
+            require __DIR__ . '/myOrders.php';
             break;
         case '/users':
             $_GET['payload'] = validateJWT($_COOKIE['Authorization'], $_ENV['JWTKey']);
@@ -107,6 +107,7 @@ try {
                         <div class='container'>
                             <a href='/login' class='custom-link col s12 btn btn-large waves-effect indigo'>Login</a>
                             <a href='/register' class='custom-link col s12 btn btn-large waves-effect indigo'>Register</a>
+                            <a href='/logout' class='custom-link col s12 btn btn-large waves-effect indigo'>Logout  </a>
                         </div>
                     </center>
                 

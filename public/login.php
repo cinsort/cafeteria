@@ -71,6 +71,21 @@
                 font-size: 1.5rem;
             }
 
+            .indigo-text {
+                color: #ec3e9c !important;
+                font-weight: 600;
+                font-size: 2rem;
+                letter-spacing: 2;
+            }
+
+            .custom-link {
+                width: fit-content;
+                border-radius: 20px;
+                background: #ec3e9c;
+                border: 1px solid rgba(232, 56, 191, 0.85);
+                color: white;
+                font-size: 1.5rem;
+            }
             label {
                 font-size: 1.5rem;
             }
@@ -93,7 +108,7 @@
                     $result = pg_execute($GLOBALS['dbConn'], "my_query", array($_POST['user_name']));
                     if (!($result)){
                         http_response_code(401);
-                        echo (" <p >Чел, зарегайся</p>
+                        echo (" <p >MAN< SIGN UP</p>
                             <a href='index' class='back-btn'>GO BACK</a>");
                     }
                     $user_id = pg_fetch_row($result)['0'];
@@ -105,9 +120,9 @@
                     http_response_code(200);
                     setcookie('Authorization', $token);
 
-                    echo "<a href='index' class='back-btn'>GO BACK</a>";
+                    echo "<a href='/myOrders' class='custom-link col s12 btn btn-large waves-effect'>MY ORDERS</a>";
                 } else {
-                    echo "<form class='container' action='login.php' method='post'>
+                    echo "<form class='container' action='/login.php' method='post'>
                         <label for='first'>Login</label>
                         <input id='first' type='text' name='user_name' class='container-input'>
                         <label for='second'>Password</label>

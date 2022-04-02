@@ -1,5 +1,6 @@
 <?php
 require 'database.php';
+require "./jwt.php";
 ob_start();
 ?>
     <html>
@@ -61,16 +62,6 @@ ob_start();
                 font-size: 1.5rem;
             }
 
-            .back-btn {
-                width: fit-content;
-                border-radius: 20px;
-                background: #ec3e9c;
-                border: 1px solid rgba(232, 56, 191, 0.85);
-                padding: 8px 32px;
-                color: white;
-                font-size: 1.5rem;
-            }
-
             .container-select {
                 cursor: pointer;
                 width: 100%;
@@ -81,6 +72,22 @@ ob_start();
                 padding-left: 2rem;
                 border: 1px solid #f50dd8;
                 font-size: 1.2rem;
+            }
+
+            .custom-link {
+                width: fit-content;
+                border-radius: 20px;
+                background: #ec3e9c;
+                border: 1px solid rgba(232, 56, 191, 0.85);
+                color: white;
+                font-size: 1.5rem;
+            }
+
+            .indigo-text {
+                color: #ec3e9c !important;
+                font-weight: 600;
+                font-size: 2rem;
+                letter-spacing: 2;
             }
 
             label {
@@ -95,10 +102,12 @@ ob_start();
         <center>
             <div class="section"></div>
 
-            <h5 class="indigo-text">Make you order</h5>
+            <h5 class="indigo-text">MAKE YOUR ORDER</h5>
             <div class="section"></div>
 
             <?php
+                if (!(isset($_GET['payload'])))
+                    $_GET['payload'] = validateJWT($_COOKIE['Authorization'], $_ENV['JWTKey']);
                 if (isset($_POST['order_name']) && isset($_POST['cafe_name'])) {
                     $user_id = json_decode($_GET['payload'])->sub;
                     $sql = "SELECT * FROM cafes WHERE cafe_name = $1 LIMIT 1";
@@ -113,8 +122,8 @@ ob_start();
                     $result = pg_execute($GLOBALS['dbConn'], "insert_order", array($_POST['order_name'], $cafe_id, $user_id));
                     if (!($result))
                         throw new Exception("newOrder error: inserting failed: $query\n", 409);
-                    header('Content-Type: application/json; charset=utf-8');
                     http_response_code(201);
+                    echo "<a href='/myOrders' class='custom-link col s12 btn btn-large waves-effect'>MY ORDERS</a>";
                 } else {
                     echo "<form class='container' action='newOrder.php' method='post'>
                         <label for='first'>Order Name</label>
@@ -125,15 +134,15 @@ ob_start();
                             <option value='BERRY - RASPBERRY'>BERRY - RASPBERRY</option>
                             <option value='PALKI'>PALKI</option>
                         </select>
-                        <button type='submit' class='container-button'>Authorize</button>
+                        <button type='submit' class='container-button'>MAKE ORDER</button>
                     </form>";
                 }
             ?>
         </center>
 
 
-        <div class=" section "></div>
-        <div class="section "></div>
+        <div class="section"></div>
+        <div class="section"></div>
     </main>
     <script type="text/javascript " src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js "></script>
     <script type="text/javascript "

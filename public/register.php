@@ -61,12 +61,11 @@
             font-size: 1.5rem;
         }
 
-        .back-btn {
+        .custom-link {
             width: fit-content;
             border-radius: 20px;
             background: #ec3e9c;
             border: 1px solid rgba(232, 56, 191, 0.85);
-            padding: 8px 32px;
             color: white;
             font-size: 1.5rem;
         }
@@ -101,7 +100,7 @@
                 ];
                 $token = encodeJWT($payload, $_ENV['JWTKey']);
                 setcookie('Authorization', $token);
-                echo "<a href='index' class='back-btn'>GO BACK</a>";
+                echo "<a href='/newOrder' class='custom-link col s12 btn btn-large waves-effect'>MAKE A BRAND NEW ORDER</a>";
             } else {
                 echo "<form class='container' action='register.php' method='post'>
                     <label for='first'>Login</label>
