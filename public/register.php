@@ -61,15 +61,6 @@
             font-size: 1.5rem;
         }
 
-        .custom-link {
-            width: fit-content;
-            border-radius: 20px;
-            background: #ec3e9c;
-            border: 1px solid rgba(232, 56, 191, 0.85);
-            color: white;
-            font-size: 1.5rem;
-        }
-
         label {
             font-size: 1.5rem;
         }
@@ -82,7 +73,7 @@
     <center>
         <div class="section"></div>
 
-        <h5 class="indigo-text">FUCK YOUUUU</h5>
+        <h5 class="indigo-text">MAN INSERT UR DATA</h5>
         <div class="section"></div>
 
         <?php
@@ -103,7 +94,7 @@
                 ];
                 $token = encodeJWT($payload, $_ENV['JWTKey']);
                 setcookie('Authorization', $token);
-                echo "<a href='/newOrder' class='custom-link col s12 btn btn-large waves-effect'>MAKE A BRAND NEW ORDER</a>";
+                echo "<a href='/newOrder' class='container-button'>MAKE A BRAND NEW ORDER</a>";
             } else {
                 echo "<form class='container' action='register.php' method='post'>
                     <label for='first'>Login</label>

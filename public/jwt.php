@@ -9,7 +9,7 @@ if(!function_exists('base64URLEncode')) {
 if(!function_exists('encodeJWT')) {
     function encodeJWT(array $payload, string $secret, array $header = ['typ' => 'JWT', 'alg' => 'HS256']): string
     {
-        if (isset($payload['iss']) && isset($payload['exp'])) {
+        if (isset($payload['sub']) && isset($payload['exp'])) {
             $headerEncoded = base64URLEncode(json_encode($header));
             $payloadEncoded = base64URLEncode(json_encode($payload));
             $signature = hash_hmac('SHA256', "$headerEncoded.$payloadEncoded", $secret, true);
