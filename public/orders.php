@@ -10,6 +10,12 @@ if (!($result))
     throw new Exception("newOrder error: cafe not found: $query\n", 404);
 
 while ($row = pg_fetch_row($result)) {
-    foreach ($row as $key) echo $key;
+    echo "<div style='display: flex; width: fit-content;
+        font-size: 1.2rem;
+        font-family: monospace;
+        color: #f921e5;'>";
+    foreach ($row as $key)
+        echo "<p style='margin: 4px 8px'>$key</p>";
+    echo "</div>";
 }
 http_response_code(201);

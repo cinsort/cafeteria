@@ -20,6 +20,7 @@ x-project: &project
     DB_USERNAME: postgres
     DB_PASSWORD: password
     WAIT_HOSTS: postgres:5432
+    JWTKey: 'eAEXWnD2bHbcoxZxC6v1jnvzJgD7lNhygGqInMaq6njwg59Qgj0EK80Oyh7jzHpx'
 
 volumes:
   postgresql-data: {}

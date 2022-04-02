@@ -1,10 +1,11 @@
 <?php
+require "./jwt.php";
+$GLOBALS['dbConn'] = pg_connect('host=postgres dbname=app user=postgres password=password')
+    or die('Cannot connect to DB: ' . pg_last_error());
 
 if(!function_exists('initDB')) {
     function initDB(): void
     {
-        $GLOBALS['dbConn'] = pg_connect('host=postgres dbname=app user=postgres password=password')
-            or die('Cannot connect to DB: ' . pg_last_error());
         pg_query($GLOBALS['dbConn'], "CREATE TABLE IF NOT EXISTS users(
             user_id SERIAL PRIMARY KEY,
             user_name VARCHAR(25) NOT NULL,
