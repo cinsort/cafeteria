@@ -339,6 +339,9 @@ try {
             
             </html>";
             break;
+        case '/debug':
+            require __DIR__ . '/debug.php';
+            break;
         default:
             http_response_code(404);
             require __DIR__ . '/404.php';
