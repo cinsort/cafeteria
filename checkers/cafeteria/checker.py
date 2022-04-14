@@ -63,7 +63,8 @@ def check(host: str):
 def put(host: str, flag: str):
     s = FakeSession(host, PORT)
     name = _gen_secret_name()
-    token = _register(s, name)
+    password = _gen_password()
+    token = _register(s, name, password)
 
     _put(s, flag)
 
@@ -88,10 +89,10 @@ def get(host: str, flag_id: str, flag: str):
         )
 
     s = FakeSession(host, PORT)
-    s.cookies = data["token"]
+    s.cookies["Authorization"] = data["token"]
     _log("Getting flag using api")
     if not _get(s, flag):
-        die(ExitStatus.CORRUPT, f"Can't find a flag in {message}")
+        die(ExitStatus.CORRUPT, f"Can't find a flag in /myOrders")
     die(ExitStatus.OK, f"All OK! Successfully retrieved a flag from api")
 
 
@@ -424,7 +425,7 @@ def _main():
             get(hostname, fid, flag)
         elif cmd == "put":
             fid, flag = argv[3], argv[4]
-            put(hostname, fid, flag)
+            put(hostname, flag)
         elif cmd == "check":
             check(hostname)
         elif cmd == "info":
