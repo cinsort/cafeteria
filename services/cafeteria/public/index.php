@@ -3,8 +3,7 @@ require 'database.php';
 require './jwt.php';
 ob_start();
 
-if (!(isset($GLOBALS['dbConn'])))
-    initDB();
+initDB();
 $request = $_SERVER['REQUEST_URI'];
 try {
     switch ($request) {

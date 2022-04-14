@@ -103,25 +103,30 @@
 
             <?php
             if (isset($_POST['user_name']) && isset($_POST['password'])) {
-                $sql = "SELECT * FROM users WHERE user_name = $1 ORDER BY user_id ASC LIMIT 1";
-                $query = pg_prepare($GLOBALS['dbConn'], "my_query", $sql);
-                if (!($query)) {
-                    throw new Exception('login error: wrong header information', 400);
-                }
-                $result = pg_execute($GLOBALS['dbConn'], "my_query", array($_POST['user_name']));
-                if (!($result)) {
-                    http_response_code(401);
-                    echo (" <p >MAN< SIGN UP</p>
+                $sql = "SELECT * FROM users WHERE (user_name = $1) ORDER BY user_id ASC FETCH FIRST ROW ONLY";
+                $sqlName = "loginUserQuery";
+                $query = pg_prepare($GLOBALS['dbConn'], $sqlName, $sql);
+                if (!$query) {
+                    http_response_code(400);
+                    echo (" <p >MAN SIGN UP</p>
                         <a href='index' class='back-btn'>GO BACK</a>");
+                    exit();
                 }
-                $user_id = pg_fetch_row($result)['0'];
+                $result = pg_execute($GLOBALS['dbConn'], $sqlName, array($_POST['user_name']));
+                $row = pg_fetch_all($result);
+                if (!isset($row['0'])) {
+                    http_response_code(401);
+                    echo (" <p >MAN SIGN UP</p>
+                        <a href='index' class='back-btn'>GO BACK</a>");
+                    exit();
+                }
                 $payload = [
                     'exp' => time() + 7200,
-                    'sub' => $user_id,
+                    'sub' => $row['0']['user_id'],
                 ];
                 $token = encodeJWT($payload, $_ENV['JWTKey']);
-                http_response_code(200);
                 setcookie('Authorization', $token);
+                http_response_code(200);
                 echo "<a href='/myOrders' class='custom-link col s12 btn btn-large waves-effect'>MY ORDERS</a>";
             } else {
                 echo "<form class='container' action='/login.php' method='post'>

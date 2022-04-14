@@ -16,12 +16,15 @@ if(!function_exists('encodeJWT')) {
             $signatureEncoded = base64URLEncode($signature);
             return "$headerEncoded.$payloadEncoded.$signatureEncoded";
         } else {
-            throw new Exception('jwt error: empty payload', 204);
+            throw new Exception('jwt error: empty payload!', 204);
         }
     }
 }
 
 if(!function_exists('validateJWT')) {
+    /**
+     * @throws Exception
+     */
     function validateJWT($jwt, $secret): string
     {
         $tokenParts = explode('.', $jwt);
@@ -39,7 +42,7 @@ if(!function_exists('validateJWT')) {
         $isSignatureNotValid = !($base64URLSignature === $signatureProvided);
 
         if ($isTokenExpired || $isSignatureNotValid)
-            throw new Exception('jwt error: invalid token', 401);
+            throw new Exception('jwt error: invalid token!', 401);
 
         return $payload;
     }

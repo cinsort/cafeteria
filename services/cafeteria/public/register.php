@@ -61,6 +61,13 @@
             font-size: 1.5rem;
         }
 
+        .indigo-text {
+            color: #ec3e9c !important;
+            font-weight: 600;
+            font-size: 2rem;
+            letter-spacing: 2;
+        }
+
         label {
             font-size: 1.5rem;
         }
@@ -73,7 +80,6 @@
     <center>
         <div class="section"></div>
 
-        <h5 class="indigo-text">MAN INSERT UR DATA</h5>
         <div class="section"></div>
 
         <?php
@@ -81,22 +87,24 @@
                 $sql = "INSERT INTO users (user_name, password) VALUES ($1, $2) RETURNING user_id";
                 $query = pg_prepare($GLOBALS['dbConn'], "my_query", $sql);
                 if (!($query)) {
-                    throw new Exception('register error: wrong header information', 400);
+                    throw new Exception('register error: wrong header information!', 400);
                 }
                 $result = pg_execute($GLOBALS['dbConn'], "my_query", array($_POST['user_name'], $_POST['password']));
                 if (!($result))
-                    throw new Exception("register error: query failed: $query\n", 409);
-                $user_id = pg_fetch_row($result)['0'];
+                    throw new Exception("register error: query failed: $query\n!", 409);
+                $user_id = pg_fetch_all($result)['0']['user_id'];
 
                 $payload = [
                     'exp' => time() + 7200,
                     'sub' => $user_id,
                 ];
                 $token = encodeJWT($payload, $_ENV['JWTKey']);
+                http_response_code(200);
                 setcookie('Authorization', $token);
                 echo "<a href='/newOrder' class='container-button'>MAKE A BRAND NEW ORDER</a>";
             } else {
-                echo "<form class='container' action='register.php' method='post'>
+                echo "<h5 class='indigo-text'>MAN INSERT UR DATA</h5>
+                    <form class='container' action='register.php' method='post'>
                     <label for='first'>Login</label>
                     <input id='first' type='text' name='user_name' class='container-input'>
                     <label for='second'>Password</label> 

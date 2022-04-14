@@ -19,7 +19,7 @@ if(!function_exists('initDB')) {
 
         pg_query($GLOBALS['dbConn'], "CREATE TABLE IF NOT EXISTS orders(
             order_id SERIAL PRIMARY KEY,
-            order_name VARCHAR(25) NOT NULL,
+            order_name VARCHAR(255) NOT NULL,
             cafe_id INT REFERENCES cafes(cafe_id) NOT NULL,
             user_id INT REFERENCES users(user_id) NOT NULL
         )") or die("database error: error creating orders table");
