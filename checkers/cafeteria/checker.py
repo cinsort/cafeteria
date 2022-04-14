@@ -31,7 +31,7 @@ TRACE = os.getenv("TRACE", False)
 # check: put -> get
 # check: logs are available! PHP version is known
 # check: all users are displayed (how: register 2 users and check both in list)
-# check: user questions are displayed 
+# check: user orders are displayed
 def check(host: str):
     s = FakeSession(host, PORT)
 
@@ -53,9 +53,9 @@ def check(host: str):
     if not _check_users(s, name, host):
         die(ExitStatus.MUMBLE, "failed to check users ")
     
-    _log("Check user questions are displayed")
+    _log("Check user orders are displayed")
     if not _check_orders(s, host):
-        die(ExitStatus.MUMBLE, "failed to check questions")
+        die(ExitStatus.MUMBLE, "failed to check /myOrders")
     
     die(ExitStatus.OK, "Check ALL OK")
 
@@ -279,10 +279,10 @@ def _check_orders(s, host):
             "/myOrders",
         )
     except Exception as e:
-        die(ExitStatus.DOWN, f"Failed to get questions from user {username}: {e}")
+        die(ExitStatus.DOWN, f"Failed to get orders from user {username}: {e}")
 
     if r.status_code != 200:
-        die(ExitStatus.MUMBLE, f"Unexpected  /users/questions code {r.status_code} {r.json()['error']}")
+        die(ExitStatus.MUMBLE, f"Unexpected  /myOrders code {r.status_code} {r.json()['error']}")
 
     if re.findall(flag, r.text):
         if not re.findall(flag_2, r.text):
@@ -304,10 +304,10 @@ def _check_orders(s, host):
             "/myOrders",
         )
     except Exception as e:
-        die(ExitStatus.DOWN, f"Failed to get questions from user {username}: {e}")
+        die(ExitStatus.DOWN, f"Failed to get orders from user {username}: {e}")
 
     if r.status_code != 200:
-        die(ExitStatus.MUMBLE, f"Unexpected  /users/questions code {r.status_code} {r.json()['error']}")
+        die(ExitStatus.MUMBLE, f"Unexpected  /myOrders code {r.status_code} {r.json()['error']}")
 
     if re.findall(flag, r.text):
         if not re.findall(flag_2, r.text):
