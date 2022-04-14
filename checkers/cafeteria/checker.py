@@ -168,8 +168,7 @@ def _register(s, name, user_password):
     if r.status_code != 200:
         die(ExitStatus.MUMBLE, f"Unexpected /auth/register code {r.status_code}")
 
-    try:
-    except Exception as e:
+    if not r.cookies['Authorization']:
         die(ExitStatus.DOWN, f"Failed to get token after register in service: {e}")
     
     return r.cookies['Authorization']
@@ -211,7 +210,7 @@ def _get(s, flag):
         r = s.get(
             "/myOrders"
         )
-        if not re.findall(flag, r.text):
+        if flag not in r.text:
             return False
     except Exception as e:
         die(ExitStatus.DOWN, f"Failed to get user orders: {e}")
@@ -255,7 +254,7 @@ def _check_debug(s):
         r = s.get(
             "/debug"
         )
-        if not re.findall('PHP Version', r.text):
+        if 'PHP Version' not in r.text:
             return False
         else:
             return True
@@ -280,8 +279,8 @@ def _check_orders(s, host):
     if r.status_code != 200:
         die(ExitStatus.MUMBLE, f"Unexpected  /myOrders code {r.status_code} {r.json()['error']}")
 
-    if re.findall(flag, r.text):
-        if not re.findall(flag_2, r.text):
+    if flag in r.text:
+        if flag_2 not in r.text:
             _log(f"Cant find this order {flag_2} in /myOrders")
             _log("Find first, but not find second")
             return False
@@ -305,8 +304,8 @@ def _check_orders(s, host):
     if r.status_code != 200:
         die(ExitStatus.MUMBLE, f"Unexpected  /myOrders code {r.status_code} {r.json()['error']}")
 
-    if re.findall(flag, r.text):
-        if not re.findall(flag_2, r.text):
+    if flag in r.text:
+        if flag_2 not in r.text:
             _log(f"Cant find this order {flag_2} in /myOrders")
             _log("Find first, but not find second")
             return False
