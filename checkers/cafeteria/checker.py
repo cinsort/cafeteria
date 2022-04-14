@@ -77,7 +77,6 @@ def put(host: str, flag: str):
 
 
 def get(host: str, flag_id: str, flag: str):
-    print("START GET")
     try:
         data = json.loads(flag_id)
         if not data:
@@ -89,8 +88,7 @@ def get(host: str, flag_id: str, flag: str):
         )
 
     s = FakeSession(host, PORT)
-    s.cookies['Authorization'] = data['token']
-
+    s.cookies = data["token"]
     _log("Getting flag using api")
     if not _get(s, flag):
         die(ExitStatus.CORRUPT, f"Can't find a flag in {message}")
@@ -134,7 +132,6 @@ class FakeSession(requests.Session):
     def prepare_request(self, request):
         r = super(FakeSession, self).prepare_request(request)
         r.headers["User-Agent"] = random.choice(FakeSession.USER_AGENTS)
-        r.headers["Connection"] = "close"
         return r
 
     # fmt: off
@@ -172,7 +169,6 @@ def _register(s, name, user_password):
         die(ExitStatus.MUMBLE, f"Unexpected /auth/register code {r.status_code}")
 
     try:
-        s.cookies['Authorization'] = r.cookies['Authorization']
     except Exception as e:
         die(ExitStatus.DOWN, f"Failed to get token after register in service: {e}")
     
