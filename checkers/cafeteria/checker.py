@@ -275,7 +275,7 @@ def _check_orders(s, host):
             "/myOrders",
         )
     except Exception as e:
-        die(ExitStatus.DOWN, f"Failed to get orders from user {username}: {e}")
+        die(ExitStatus.DOWN, f"Failed to get orders from user: {e}")
 
     if r.status_code != 200:
         die(ExitStatus.MUMBLE, f"Unexpected  /myOrders code {r.status_code} {r.json()['error']}")
@@ -300,7 +300,7 @@ def _check_orders(s, host):
             "/myOrders",
         )
     except Exception as e:
-        die(ExitStatus.DOWN, f"Failed to get orders from user {username}: {e}")
+        die(ExitStatus.DOWN, f"Failed to get orders from user: {e}")
 
     if r.status_code != 200:
         die(ExitStatus.MUMBLE, f"Unexpected  /myOrders code {r.status_code} {r.json()['error']}")

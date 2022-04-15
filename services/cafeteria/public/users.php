@@ -23,6 +23,6 @@ while ($row = pg_fetch_row($result)) {
         font-family: monospace;
         color: #f921e5;'>";
     foreach ($row as $key)
-        echo "<p style='margin: 4px 8px'> $key </p>";
+        echo "<p style='margin: 4px 8px'>$key</p>";
     echo "</div>";
 }
