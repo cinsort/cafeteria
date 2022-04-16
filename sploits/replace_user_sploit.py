@@ -2,14 +2,11 @@
 
 import requests
 import re
-import json
 import sys
-import os
 import string
 import random
-
+old_users = []
 ip = sys.argv[1]
-
 host = f"http://{ip}:8084"
 s = requests.Session()
 user_name = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(15))
@@ -24,7 +21,7 @@ r = s.get(
   host + '/users'
 )
 users = re.findall("\</p\>\<p style=\'margin: 4px 8px\'\>(.*?)\</p\>", r.text)
-for user in users:
+for user in list(set(users).difference(old_users)):
   r1 = s.post(
     host + '/login',
     data = {
@@ -36,4 +33,4 @@ for user in users:
     host + "/myOrders"
   )
   flags = re.findall("\</p\>\<p style=\'margin: 4px 8px\'\>(.*?)\</p\>", r1.text)
-  print (flags, flush = True)
+  print (flags,flush=True)
